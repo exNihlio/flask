@@ -1,7 +1,7 @@
 FROM centos:7
 
 RUN yum -y install python3 python3-pip \
-    && pip3 install flask gunicorn flask_sqlalchemy psycopg2-binary \
+    && pip3 install flask gunicorn flask_sqlalchemy psycopg2-binary pymemcache \
     && mkdir -p /python/app/templates
 
 WORKDIR /python/app/

@@ -1,17 +1,44 @@
 #!/usr/bin/env python3
 
+import logging
 from socket import gethostname
 from flask import Flask, render_template
 from os import environ as env
 from flask import jsonify
+from pymemcache.client.base import Client as mClient
 app = Flask(__name__)
 
 @app.route("/")
 def index():
     hostname = gethostname()
     bg_color = "AliceBlue;"
+    try:
+        memcachedURL = env['memcachedURL']
+    except:
+        memcachedURL = 'localhost' 
+        log.warning("Warning: Set memcachedURL to: {}".format(memcachedURL))
 
-    return render_template("index.html", hostname=hostname, bg_color=bg_color)
+    # memcached client
+    c = mClient((memcachedURL, 11211))
+    try: 
+        int_count = c.get('count')
+    except:
+        int_count = 'Error retrieving results'
+
+    if int_count == None:
+        c.set('count', 0)
+        
+    try:
+        c.incr('count', 1)
+    except:
+        pass
+
+    try:
+        int_count = int(int_count.decode('utf-8'))
+    except:
+        pass
+
+    return render_template("index.html", hostname=hostname, bg_color=bg_color, count=int_count)
 
 @app.route("/db")
 def dbStatus():
@@ -62,3 +89,7 @@ def basic():
               
                
     return jsonify(people)
+
+@app.route('/memcache')
+def webCount():
+    return website_count
