@@ -6,7 +6,8 @@
 <body> 
     <h2> Welcome to {{ hostname }} </h2>
 <footer>
-    <p text-align: center> Total Hits: {{ count }}</p>
+    <p text-align: center> Hits from memcached: {{ memcached_count }}</p>
+    <p text-align: center> Hits from redis: {{ redis_count }}</p>
 </footer>
 </body>
 </html>
