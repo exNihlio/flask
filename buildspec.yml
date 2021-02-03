@@ -1,5 +1,9 @@
 version: 0.2
-
+env:
+  shell: /bin/bash
+  variables:
+    FLASK_IMAGE_REPO: 'sample/flask'
+    FLASK_IMAGE_TAG: 1
 phases:
   pre_build:
     commands:
@@ -9,7 +13,6 @@ phases:
     commands:
       - echo Build started on $(date)
       - echo Building the Docker image...
-      - source .flask_build_vars
       - docker build -t ${FLASK_IMAGE_REPO}:${FLASK_IMAGE_TAG} .
       - docker tag ${FLASK_IMAGE_REPO}:${FLASK_IMAGE_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${FLASK_IMAGE_REPO}:${FLASK_IMAGE_TAG}
   post_build:
