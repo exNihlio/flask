@@ -1,0 +1,2 @@
+export FLASK_IMAGE_TAG=1
+export FLASK_IMAGE_REPO=sample/flask
