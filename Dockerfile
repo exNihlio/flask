@@ -1,13 +1,14 @@
 FROM centos:7
 
-#COPY requirements.txt
+WORKDIR /python/app/
+
+COPY requirements.txt /python/app/
 
 RUN yum -y install python3 python3-pip \
-    && pip3 install flask gunicorn flask_sqlalchemy psycopg2-binary pymemcache redis \
+    && pip3 install -r requirements.txt \
+    #&& pip3 install flask gunicorn flask_sqlalchemy psycopg2-binary pymemcache redis \
     && mkdir -p /python/app/templates \
     && mkdir -p /python/app/static/{images,css}
-
-WORKDIR /python/app/
 
 COPY myapp.py /python/app/
 

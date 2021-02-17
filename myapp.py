@@ -5,8 +5,9 @@ from socket import gethostname
 from flask import Flask, render_template
 from os import environ as env
 from flask import jsonify
-from pymemcache.client.base import Client as mClient
+#from pymemcache.client.base import Client as mClient
 from redis import Redis as r
+
 app = Flask(__name__)
 
 @app.route('/')
