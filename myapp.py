@@ -11,54 +11,19 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    turtles = "static/images/tur_in_shell_resize.png"
     hostname = gethostname()
     bg_color = 'AliceBlue;'
-    try:
-        memcachedURL = env['memcachedURL']
-    except:
-        memcachedURL = 'localhost' 
-        log.warning('Warning: Set memcachedURL to: {}'.format(memcachedURL))
-
-    try:
-        memcachedPort = env['memcachedPort']
-    except:
-        memcachedPort = 11211
-
     try:
         redisURL = env['redisURL']
     except:
         redisURL = 'localhost'
         log.warning('Warning: Set redisURL to: {}'.format(redisURL))
 
-
     try:
         redisPort = env['redisPort']
     except:
         redisPort = 6379
-
-    # memcached client
-    c = mClient((memcachedURL, int(memcachedPort)))
-    try: 
-        mCount = c.get('website:hits')
-    except:
-        log.warning('Unable to retrieve hits from memcached')
-        mCount = 'Unknown'
-
-    if mCount == None:
-        c.set('website:hits', 1)
-
-    if mCount == 'Unknown':
-        pass
-    else:
-        try:
-            mCount = int(mCount.decode('utf-8'))
-        except:
-            log.warning('Unable to decode hits from memcached')
-            mCount = 'Error decoding hits count'
-    try:
-        c.incr('website:hits', 1)
-    except:
-        pass
 
     # redis client
     rClient = r(host=redisURL, port=redisPort)
@@ -79,8 +44,8 @@ def index():
             rCount = 'Unable to decode hits from Redis'
 
     # Rendered HTML
-    return render_template('index.html', hostname=hostname, bg_color=bg_color, memcached_count=mCount,
-                           redis_count=rCount)
+    return render_template('index.html', hostname=hostname, bg_color=bg_color, 
+                            redis_count=rCount, img_src=turtles)
 
 #@app.route('/db')
 #def dbStatus():
@@ -103,35 +68,3 @@ def index():
 #                                      db_color=db_color,
 #                                      db_access_color=db_access_color)
 #
-#@app.route('/endpoint')
-#def ecrStatus():
-#    try:
-#        env['ECR_ENDPOINT'] 
-#        endpoint_color = 'background-color:MediumSeaGreen;'
-#    except:
-#        endpoint_color = 'background-color:Tomato;'
-#    
-#    return render_template('endpoint.html', endpoint_color=endpoint_color)
-#
-#if __name__ == '__main__':
-#    app.run()
-#
-#@app.route('/json')
-#def basic():
-#    people = [ 
-#                {
-#                    'name': 'Nicole',
-#                    'age': 23
-#                },
-#                {
-#                    'name': 'Claire',
-#                    'age': 27,
-#                }
-#            ]
-#              
-#               
-#    return jsonify(people)
-#
-#@app.route('/memcache')
-#def webCount():
-#    return website_count
