@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    turtles = "static/images/tur_in_shell_resize.png"
+    turtles = "static/images/tur_out_shell_resize.png"
     hostname = gethostname()
     bg_color = 'AliceBlue;'
     try:
